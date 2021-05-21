@@ -1,0 +1,10 @@
+Ban đầu để đồng bộ hiển thị ở các client side, chúng ta có thể nghĩ đến việc gửi vị trí từ client đến sever và server gửi lại vị trí của các client khác đến client. Nhưng việc này có 2 nhược điểm:
+- Các client không biết vận tốc của những client khác để tính toán va chạm vật lý
+- Việc gửi tọa độ như vậy sẽ phải tiến hành liên tục: ~60 lần/ giây, điều này gây ra việc chiếm nhiều băng thông và có thể gây ra độ trễ phản hồi, tuy vào số lượng người truy cập
+
+- Thay vì thế, chúng ta có thể gửi các giá trị tọa độ bằng các giá trị đúng sai, theo cách đó, phía client có thể tính toán vector gia tốc, vận tốc và mô phỏng chuyển động
+
+- Nhưng lại phát sinh 1 vấn đề mới: việc tính toán và gửi dữ liệu từ phía client vẫn không thể đồng bộ khi mà người chơi thực hiện nhiều hành động,
+tín hiệu truyền có 1 độ trễ nhất định vì vậy khi người chơi chuyển động càng nhanh, sai lệch càng lớn = > không đồng bộ hóa
+
+==> Giải pháp: khi nhận được dữ liệu từ các client, thay vì server truyền dữ liệu đó cho các client khác để phía client tính toán thì server sẽ thực hiện tính toán và trả về dữ liệu kết quả tính toán cho các client.

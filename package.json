@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "baitaplon",
+  "version": "1.0.0",
+  "description": "Building an online game use socket.io version 2.3.0 and node.js",
+  "main": "(server.js)",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sasuke0508/GameOnline.git"
+  },
+  "author": "Sasuke0508",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sasuke0508/GameOnline/issues"
+  },
+  "homepage": "https://github.com/Sasuke0508/GameOnline#readme"
+}
