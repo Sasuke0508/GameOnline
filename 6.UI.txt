@@ -1,0 +1,2 @@
+- Người dùng có thể đặt tên khi tham gia game
+- Một người không thể chơi game

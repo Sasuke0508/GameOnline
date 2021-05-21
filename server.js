@@ -922,6 +922,8 @@ let footballPos = {};
 let numberOfClient = 0;
 // Số phòng
 let roomNo;
+// Game chỉ có thể chơi khi đủ 2 người
+let gameIsOn = {};
 putWallsAround(0, 0, 640, 480);
 
 io.on("connection", connected);
@@ -940,26 +942,46 @@ function connected(socket) {
     // creat player 1
     serverBalls[socket.id] = new Capsule(80, 270, 150, 270, 25, 10);
     serverBalls[socket.id].maxSpeed = 4;
+    // Thêm lực ma sát cho chân thực
+    serverBalls[socket.id].angFriction = 0.01;
+    serverBalls[socket.id].keyForce = 0.08;
     serverBalls[socket.id].score = 0;
     serverBalls[socket.id].no = 1;
     serverBalls[socket.id].layer = roomNo;
-    playersReg[socket.id] = {id: socket.id, x: 115, y: 270, roomNo: roomNo, no: 1 };
+    playersReg[socket.id] = {
+      id: socket.id,
+      x: 115,
+      y: 270,
+      roomNo: roomNo,
+      no: 1,
+    };
   } else if (numberOfClient % 2 === 0) {
     console.log("Second player joined!");
     // creat player 2
     serverBalls[socket.id] = new Capsule(560, 270, 490, 270, 25, 10);
     serverBalls[socket.id].maxSpeed = 4;
+    serverBalls[socket.id].angFriction = 0.01;
+    serverBalls[socket.id].keyForce = 0.08;
     serverBalls[socket.id].score = 0;
     serverBalls[socket.id].no = 2;
     serverBalls[socket.id].layer = roomNo;
-    playersReg[socket.id] = {id: socket.id, x: 525, y: 270, roomNo: roomNo, no: 2 };
+    playersReg[socket.id] = {
+      id: socket.id,
+      x: 525,
+      y: 270,
+      roomNo: roomNo,
+      no: 2,
+    };
     // creat ball
     football[roomNo] = new Ball(320, 270, 20, 6);
     football[roomNo].layer = roomNo;
-    io.emit("updateFootball", { x: football[roomNo].pos.x, y: football[roomNo].pos.y });
+    io.emit("updateFootball", {
+      x: football[roomNo].pos.x,
+      y: football[roomNo].pos.y,
+    });
   }
 
-  for(let id in serverBalls){
+  for (let id in serverBalls) {
     io.to(serverBalls[id].layer).emit("updateConnections", playersReg[id]);
   }
 
@@ -970,21 +992,24 @@ function connected(socket) {
     }
     serverBalls[socket.id].remove();
     // Xóa dữ liệu của người chơi tại phòng vừa kết nối
-    io.to(serverBalls[socket.id].layer).emit('deletePlayer', playersReg[socket.id]);
+    io.to(serverBalls[socket.id].layer).emit(
+      "deletePlayer",
+      playersReg[socket.id]
+    );
     delete serverBalls[socket.id];
     delete playersReg[socket.id];
     console.log("Goodbye client with id " + socket.id);
     console.log("Current number of players: " + Object.keys(playersReg).length);
     console.log(playersReg);
     console.log(`Number of balls: ${Object.keys(football).length}`);
-    console.log(`Number of BODIES: ${BODIES.length-12}`);
+    console.log(`Number of BODIES: ${BODIES.length - 12}`);
     io.emit("updateConnections", playersReg);
   });
 
   console.log("Current number of players: " + Object.keys(playersReg).length);
   console.log(playersReg);
   console.log(`Number of balls: ${Object.keys(football).length}`);
-  console.log(`Number of BODIES: ${BODIES.length-12}`);
+  console.log(`Number of BODIES: ${BODIES.length - 12}`);
 
   socket.on("userCommands", (data) => {
     serverBalls[socket.id].left = data.left;
@@ -993,6 +1018,25 @@ function connected(socket) {
     serverBalls[socket.id].down = data.down;
     serverBalls[socket.id].action = data.action;
   });
+
+  socket.on("clientName", (data) => {
+    serverBalls[socket.id].name = data;
+    console.log(data + " is in room no." + serverBalls[socket.id].layer);
+    if (playerReadyInRoom(serverBalls[socket.id].layer) === 2) {
+      for (let id in serverBalls) {
+        // Nếu 2 người chơi cùng phòng
+        if (serverBalls[id].layer === serverBalls[socket.id].layer) {
+          io.to(serverBalls[id].layer).emit("playerName", {
+            id: id,
+            name: serverBalls[id].name,
+          });
+        }
+      }
+      gameIsOn[serverBalls[socket.id].layer] = true;
+    } else {
+      gameIsOn[serverBalls[socket.id].layer] = false;
+    }
+  });
 }
 
 function serverLoop() {
@@ -1000,31 +1044,33 @@ function serverLoop() {
   userInteraction();
   // Xử lý va chạm và chuyển động, tính toán vị trí mới
   physicsLoop();
-  // Lưu các vị trí mới
-  for (let id in serverBalls) {
-    // Gửi thông tin đến phòng cụ thể của người chơi
-    io.to(serverBalls[id].layer).emit("positionUpdate", {
-      id: id, 
-      x: serverBalls[id].pos.x,
-      y: serverBalls[id].pos.y,
-      // Thuộc tính góc, hướng của ball
-      angle: serverBalls[id].angle
-    });
-  }
 
-  // Tạo bóng
-  for(let room = 1; room <= roomNo; room++){
-    if (football[room] === undefined) {
-      console.log("Wating for 2 player...");
-    } else {
+  for (let room = 1; room <= roomNo; room++) {
+    if (gameIsOn[room] === true) {
       gameLogic(room);
+      // Lưu các vị trí mới
+      for (let id in serverBalls) {
+        if (serverBalls[id].layer === room) {
+          // Gửi thông tin đến phòng cụ thể của người chơi
+          io.to(room).emit("positionUpdate", {
+            id: id,
+            x: serverBalls[id].pos.x,
+            y: serverBalls[id].pos.y,
+            // Thuộc tính góc, hướng của ball
+            angle: serverBalls[id].angle,
+          });
+        }
+      }
       io.to(room).emit("updateFootball", {
         x: football[room].pos.x,
-        y: football[room].pos.y 
+        y: football[room].pos.y,
       });
     }
+    else{
+
+    }
   }
-  
+
 }
 
 function gameLogic(room) {
@@ -1043,9 +1089,9 @@ function gameOver(room) {
   io.emit("updateScore", null);
   setTimeout(() => {
     for (let id in serverBalls) {
-      if(serverBalls[id].layer === room){
+      if (serverBalls[id].layer === room) {
         serverBalls[id].score = 0;
-      }    
+      }
     }
   }, 2000);
 }
@@ -1111,4 +1157,15 @@ function buildStadium() {
   new Wall(590, 360, 630, 360);
   new Wall(640, 360, 640, 180);
   new Wall(630, 180, 590, 180);
+}
+
+// Kiểm tra phòng có đủ người chơi chưa
+function playerReadyInRoom(room) {
+  let playerInRoom = 0;
+  for (let id in serverBalls) {
+    if (serverBalls[id].layer === room && serverBalls[id].name) {
+      playerInRoom++;
+    }
+  }
+  return playerInRoom;
 }

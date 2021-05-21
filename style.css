@@ -4,3 +4,12 @@
     margin: 0 auto;
     background: #fffacc;
 }
+
+#gameArea{
+    display: none;
+}
+
+#winning{
+    color: red;
+    text-align: center;
+}

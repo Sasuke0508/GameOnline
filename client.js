@@ -2,11 +2,14 @@ const socket = io.connect("http://localhost:5500");
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const form = document.getElementById("userForm");
+const gameAreaDiv = document.getElementById("gameArea");
 
 buildStadium();
 let clientBalls = {};
 let selfID;
 let football;
+let userName;
 
 //setting up the environment
 putWallsAround(0, 0, canvas.clientWidth, canvas.clientHeight);
@@ -37,6 +40,8 @@ socket.on("updateConnections", (player) => {
       clientBalls[player.id].color = "lightgreen";
     }
     if (player.id === selfID) {
+      document.getElementById("playerWelcome").innerHTML = 
+      "Hi, enter your nickname and start to play in room no." + player.roomNo;
       userInput(clientBalls[player.id]);
     }
   }
@@ -50,6 +55,10 @@ socket.on('deletePlayer', player => {
     football.remove();
     delete football;
   }
+})
+
+socket.on("playerName", data=>{
+  clientBalls[data.id].name = data.name;
 })
 
 socket.on("updateFootball", (footballPos) => {
@@ -79,12 +88,17 @@ socket.on("updateScore", (scorerId) => {
       clientBalls[id].score = 0;
     }
   } else {
+    document.getElementById("winning").innerHTML = "";
     for (let id in clientBalls) {
       if (id === scorerId) {
         if (clientBalls[id].no === 1) {
           clientBalls[id].score++;
         } else if (clientBalls[id].no === 2) {
           clientBalls[id].score++;
+        }
+        if(clientBalls[id].score === 3){
+          document.getElementById("winning").innerHTML =
+          "The winner is " + clientBalls[id].name + "!<br>LET'S PLAY AGAIN!";
         }
       }
     }
@@ -97,9 +111,25 @@ function userInterface() {
   ctx.font = "30px Arial";
   for (let id in clientBalls) {
     if (clientBalls[id].no === 1) {
-      ctx.fillText(clientBalls[id].score, 20, 30);
+      ctx.fillStyle = "blue";
+      ctx.textAlign = "left";
+      ctx.fillText(clientBalls[id].score, 30, 30);
+      if(clientBalls[id].name){
+        ctx.fillText(clientBalls[id].name, 30, 70);
+      }else{
+        ctx.fillStyle = "black";
+        ctx.fillText("...", 30, 70);
+      }
     } else if (clientBalls[id].no === 2) {
+      ctx.fillStyle = "green";
+      ctx.textAlign = "right";
       ctx.fillText(clientBalls[id].score, 600, 30);
+      if(clientBalls[id].name){
+        ctx.fillText(clientBalls[id].name, 600, 70);
+      }else{
+        ctx.fillStyle = "black";
+        ctx.fillText("...", 600, 70);
+      }
     }
   }
 }
@@ -124,4 +154,15 @@ function buildStadium() {
   new Wall(590, 360, 630, 360);
   new Wall(640, 360, 640, 180);
   new Wall(630, 180, 590, 180);
+}
+
+
+// UI
+form.onsubmit = function(e){
+  e.preventDefault();
+  form.style.display = "none";
+  gameAreaDiv.style.display = "block";
+  clientBalls[selfID].name = document.getElementById("userName").value;
+  socket.emit("clientName", clientBalls[selfID].name);
+  return false;
 }

@@ -9,8 +9,19 @@
     <title>FootBall Game</title>
 </head>
 <body>
-    <canvas id="canvas" tabindex = 0 width="640" height="480"></canvas>
     
+    <form action="" id="userForm">
+        <p id="playerWelcome"></p>
+        <input type="text" id="userName" required maxlength="12" autocomplete="off">
+        <button type="submit">GO</button>
+    </form>
+
+    <div id="gameArea">
+        <canvas id="canvas" tabindex = 0 width="640" height="480"></canvas>
+        <br>
+        <h1 id="winning"></h1>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script src="mocorgo.js"></script>
     <script src="userInput.js"></script>
