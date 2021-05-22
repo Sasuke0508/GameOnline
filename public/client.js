@@ -4,26 +4,27 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const form = document.getElementById("userForm");
 const gameAreaDiv = document.getElementById("gameArea");
+const homePage = document.getElementById("home");
 
 // chatBox
 var messages = document.getElementById('messages');
 var formChat = document.getElementById('form');
 var input = document.getElementById('input');
 
-formChat.addEventListener('onclick', function(e) {
-  e.preventDefault();
-  if (input.value) {
-    socket.emit('chat message', input.value);
-    input.value = '';
-  }
-});
+// formChat.addEventListener('submit', function(e) {
+//   e.preventDefault();
+//   if (input.value) {
+//     socket.emit('chat message', input.value);
+//     input.value = '';
+//   }
+// });
 
-socket.on('chat message', function(msg) {
-  var item = document.createElement('li');
-  item.textContent = msg;
-  messages.appendChild(item);
-  window.scrollTo(0, document.body.scrollHeight);
-});
+// socket.on('chat message', function(msg) {
+//   var item = document.createElement('li');
+//   item.textContent = msg;
+//   messages.appendChild(item);
+//   window.scrollTo(0, document.body.scrollHeight);
+// });
 
 buildStadium();
 let clientBalls = {};
@@ -186,7 +187,7 @@ function buildStadium() {
 // UI
 form.onsubmit = function(e){
   e.preventDefault();
-  form.style.display = "none";
+  homePage.style.display = "none";
   gameAreaDiv.style.display = "block";
   canvas.focus();
   clientBalls[selfID].name = document.getElementById("userName").value;

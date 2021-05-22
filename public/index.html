@@ -13,21 +13,22 @@
 </head>
 
 <body>
-
-    <form action="" id="userForm">
+    <div id="home">
         <h2 class="fst-italic fw-bold">WELCOME TO THE SOCCER GAME</h2>
         <div class="container mt-4">
             <div class="row">
                 <div class="col body__left pt-3">
-                    <p id="playerWelcome"></p>
-                    <div class="input-group mb-3">
-                        <input type="text" id="userName" class="form-control" placeholder="Enter nickname" required
-                            maxlength="12" autocomplete="off">
-                        <button class="btn btn-success" type="submit">GO</button>
-                    </div>
+                    <form action="" id="userForm">
+                        <p id="playerWelcome"></p>
+                        <div class="input-group mb-3">
+                            <input type="text" id="userName" class="form-control" placeholder="Enter nickname" required
+                                maxlength="12" autocomplete="off">
+                            <button class="btn btn-success" type="submit">GO</button>
+                        </div>
+                    </form>
                     <ul id="messages"></ul>
                     <div id="form" action="">
-                        <input id="input" autocomplete="off" placeholder="Chat with other player"/>
+                        <input id="input" autocomplete="off" placeholder="Chat with other player" />
                         <button>Send</button>
                     </div>
                 </div>
@@ -57,8 +58,7 @@
                 </div>
             </div>
         </div>
-    </form>
-
+    </div>
     <div id="gameArea">
         <canvas id="canvas" tabindex=0 width="640" height="480"></canvas>
         <br>

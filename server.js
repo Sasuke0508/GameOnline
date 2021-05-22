@@ -940,10 +940,6 @@ setInterval(serverLoop, 1000 / 60);
 
 //listening to events after the connection is estalished
 function connected(socket) {
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-  });
-  
   numberOfClient++;
   roomNo = Math.round(numberOfClient / 2);
   socket.join(roomNo);
@@ -1048,6 +1044,10 @@ function connected(socket) {
       gameIsOn[serverBalls[socket.id].layer] = false;
     }
   });
+
+  // socket.on('chat message', (msg) => {
+  //   io.to(serverBalls[socket.id].layer).emit('chat message', msg);
+  // });
 }
 
 function serverLoop() {
