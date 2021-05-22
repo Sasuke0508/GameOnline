@@ -1,4 +1,4 @@
-const socket = io.connect("http://localhost:5500");
+const socket = io.connect();
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -162,6 +162,7 @@ form.onsubmit = function(e){
   e.preventDefault();
   form.style.display = "none";
   gameAreaDiv.style.display = "block";
+  canvas.focus();
   clientBalls[selfID].name = document.getElementById("userName").value;
   socket.emit("clientName", clientBalls[selfID].name);
   return false;
