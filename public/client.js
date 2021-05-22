@@ -204,3 +204,10 @@ document.getElementById("playAgain").onclick = function(e){
   document.getElementById("playAgain").style.display = "none";
   socket.emit("playAgain", selfID);
 }
+
+socket.on('updateAgain', (e) => {
+  e.preventDefault();
+  document.body.style.backgroundColor = "aliceblue";
+  document.getElementById("winning").innerHTML = "";
+  document.getElementById("playAgain").style.display = "none";
+})

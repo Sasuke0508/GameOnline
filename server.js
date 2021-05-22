@@ -1058,6 +1058,7 @@ function connected(socket) {
             }
           }
           gameLogic(room);
+          socket.to(room).emit("updateAgain", "");
         }
       }
     }
