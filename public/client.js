@@ -205,8 +205,7 @@ document.getElementById("playAgain").onclick = function(e){
   socket.emit("playAgain", selfID);
 }
 
-socket.on('updateAgain', (e) => {
-  e.preventDefault();
+socket.on('updateAgain', () => {
   document.body.style.backgroundColor = "aliceblue";
   document.getElementById("winning").innerHTML = "";
   document.getElementById("playAgain").style.display = "none";
