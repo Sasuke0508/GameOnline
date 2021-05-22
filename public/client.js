@@ -5,6 +5,26 @@ const ctx = canvas.getContext("2d");
 const form = document.getElementById("userForm");
 const gameAreaDiv = document.getElementById("gameArea");
 
+// chatBox
+var messages = document.getElementById('messages');
+var formChat = document.getElementById('form');
+var input = document.getElementById('input');
+
+formChat.addEventListener('onclick', function(e) {
+  e.preventDefault();
+  if (input.value) {
+    socket.emit('chat message', input.value);
+    input.value = '';
+  }
+});
+
+socket.on('chat message', function(msg) {
+  var item = document.createElement('li');
+  item.textContent = msg;
+  messages.appendChild(item);
+  window.scrollTo(0, document.body.scrollHeight);
+});
+
 buildStadium();
 let clientBalls = {};
 let selfID;
