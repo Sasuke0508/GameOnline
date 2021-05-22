@@ -1,9 +1,46 @@
+body{
+    background-color: aliceblue;
+}
+
 #canvas{
     border: 1px solid black;
     display: block;
     margin: 0 auto;
     background: #fffacc;
 }
+
+#userForm h2{
+    text-align: center;
+    color: rgba(255, 68, 0, 0.8);
+}
+
+.body__left{
+    height: 80vh;
+    border: 1px solid black;
+    background-color: #ADD8E6;
+    border-radius: 10px;
+    margin: 2px;
+}
+
+.body__left #playerWelcome{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.body__right{
+    height: 80vh;
+    border: 1px solid black;
+    background-color: #90EE90;
+    border-radius: 7px;
+    margin: 2px;
+}
+
+.body__right #introGame{
+    display: flex;
+    justify-content: center;
+}
+
+
 
 #gameArea{
     display: none;

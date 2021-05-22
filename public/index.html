@@ -1,30 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <!-- BOOTSTRAP 5 CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="./style.css">
     <title>FootBall Game</title>
 </head>
+
 <body>
-    
+
     <form action="" id="userForm">
-        <p id="playerWelcome"></p>
-        <input type="text" id="userName" required maxlength="12" autocomplete="off">
-        <button type="submit">GO</button>
+        <h2 class="fst-italic fw-bold">WELCOME TO THE SOCCER GAME</h2>
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col body__left pt-3">
+                    <p id="playerWelcome"></p>
+                    <div class="input-group mb-3">
+                        <input type="text" id="userName" class="form-control" placeholder="Enter nickname" required
+                            maxlength="12" autocomplete="off">
+                        <button class="btn btn-success" type="submit">GO</button>
+                    </div>
+                </div>
+                <div class="col body__right">
+                    <div class="clearfix pt-3">
+                        <img src="https://tsh.io/wp-content/uploads/2020/04/Node-js-socket-io-tutorial-real-time-chat-app_.jpg"
+                            class="col-md-6 float-md-end mb-3 ms-md-3" alt="technologies">
+                        <h3 class="text-center">RULE</h3>
+                        <p>
+                            Welcome to the football game. The rules of the game are very simple: <br>
+                            1. You use 4 keys up, down, left, right to control the player. <br>
+                            2. The player who reaches 3 points first wins!
+                        </p>
+
+                        <p>
+                            This project is built by team 5, using technologies: socket.io, nodejs and js.
+                        </p>
+
+                        <p>
+                            As you can see in the image is the interface of the game. It is still in development. In the future, we will try to upgrade for you to have the best experience. Thanks for your visit!
+                        </p>
+                        <div id="introGame">
+                            <img src="./img/IntroGame.png" class="col-md-6 float-md-end mb-3 ms-md-3" alt="introGame">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 
     <div id="gameArea">
-        <canvas id="canvas" tabindex = 0 width="640" height="480"></canvas>
+        <canvas id="canvas" tabindex=0 width="640" height="480"></canvas>
         <br>
         <h1 id="winning"></h1>
     </div>
-
+    <!-- BOOTSTRAP 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script src="mocorgo.js"></script>
     <script src="userInput.js"></script>
     <script src="client.js"></script>
 </body>
+
 </html>
