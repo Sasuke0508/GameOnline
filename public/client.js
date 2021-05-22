@@ -126,6 +126,7 @@ socket.on("updateScore", (scorerId) => {
           }
           document.getElementById("winning").innerHTML =
           "The winner is " + clientBalls[id].name + "!<br>LET'S PLAY AGAIN!";
+          document.getElementById("playAgain").style.display = "block";
         }
       }
     }
@@ -189,8 +190,15 @@ form.onsubmit = function(e){
   e.preventDefault();
   homePage.style.display = "none";
   gameAreaDiv.style.display = "block";
+  document.getElementById("playAgain").style.display = "none";
   canvas.focus();
   clientBalls[selfID].name = document.getElementById("userName").value;
   socket.emit("clientName", clientBalls[selfID].name);
   return false;
+}
+
+document.getElementById("playAgain").onclick = function(e){
+  e.preventDefault();
+  document.getElementById("playAgain").style.display = "none";
+  socket.emit("playAgain", selfID);
 }

@@ -1048,6 +1048,20 @@ function connected(socket) {
   // socket.on('chat message', (msg) => {
   //   io.to(serverBalls[socket.id].layer).emit('chat message', msg);
   // });
+  socket.on("playAgain", id => {
+    for(let room = 1; room <= roomNo; room++){
+      if(room === serverBalls[id].layer){
+        if(playerReadyInRoom(room)){
+          for(let i in serverBalls){
+            if(serverBalls[i].layer === serverBalls[id].layer){
+              serverBalls[i].score = 0;
+            }
+          }
+          gameLogic(room);
+        }
+      }
+    }
+  })
 }
 
 function serverLoop() {
