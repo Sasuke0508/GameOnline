@@ -98,10 +98,10 @@ socket.on("updateScore", (scorerId) => {
         }
         if(clientBalls[id].score === 3){
           if(clientBalls[id].no === 1){
-            document.getElementsByTagName("body").style.backgroundColor = "#ADD8E6";
+            document.body.style.backgroundColor = "#ADD8E6";
           }
           if(clientBalls[id].no === 2){
-            document.getElementsByTagName("body").style.backgroundColor= "#90EE90";
+            document.body.style.backgroundColor = "#90EE90";
           }
           document.getElementById("winning").innerHTML =
           "The winner is " + clientBalls[id].name + "!<br>LET'S PLAY AGAIN!";
